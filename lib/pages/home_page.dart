@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:qr_reader/models/scan_model.dart';
 import 'package:qr_reader/pages/pages.dart';
 import 'package:qr_reader/providers/db_provider.dart';
+import 'package:qr_reader/providers/scan_list_provider.dart';
 import 'package:qr_reader/providers/ui_provider.dart';
 import 'package:qr_reader/widgets/widgets.dart';
-
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -16,11 +16,9 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         elevation: 0,
-        title: const Center(child:  Text('Historial')),
+        title: const Center(child: Text('Historial')),
         actions: [
-          IconButton(
-            onPressed: (){}, icon:const  Icon(Icons.delete_forever)
-            )
+          IconButton(onPressed: () {}, icon: const Icon(Icons.delete_forever))
         ],
       ),
       body: const _HomePageBody(),
@@ -38,18 +36,21 @@ class _HomePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final uiProvider = Provider.of<UiProvider>(context);
 
-
-    final currentIndex =uiProvider.selectedMenuOpt;
-    final tempScan =  ScanModel(valor:'https://google.com');
+    final currentIndex = uiProvider.selectedMenuOpt;
+    final tempScan = ScanModel(valor: 'geo:09.18.87.14');
     //DBProvider.db.database;
     //DBProvider.db.nuevoScanRaw(tempScan);
-    DBProvider.db.getScanById(1).then((value) => print(value!.valor));
-    
+    // DBProvider.db.getScanById(1).then((value) => print(value!.valor));
+    //DBProvider.db.updateScan(tempScan);
 
-    switch (currentIndex){
+    final scanListProvider =
+        Provider.of<ScanListProvider>(context, listen: false);
+    switch (currentIndex) {
       case 0:
+        scanListProvider.cargarScanPorTipo('geo');
         return const MapasPage();
       case 1:
+        scanListProvider.cargarScanPorTipo('http');
         return const DireccionesPage();
 
       default:
